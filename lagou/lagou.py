@@ -48,9 +48,9 @@ class Spider(object):
         # url = 'https://www.lagou.com/jobs/positionAjax.json?first=true&pn=%d&kd=%s&city=杭州' % (pages, self.keyword)
         headers = {
                 'User_agent': user_agent,
-                'cookie': 'user_trace_token=20161231133515-8cce936e9adc4b43abe2959e6d2f26ed; LGUID=20161231133515-e8366cd1-cf1a-11e6-b892-525400f775ce; isCloseNotice=0; PRE_UTM=; PRE_HOST=; PRE_SITE=; PRE_LAND=https%3A%2F%2Fwww.lagou.com%2F; TG-TRACK-CODE=index_user; JSESSIONID=2B00EF401744F13A4D2E3A1572D98FCB; _gat=1; _putrc=9F25F1AC70195174; login=true; unick=%E5%B1%B1%E5%A4%96%E5%B0%8F%E6%A5%BC%E5%A4%9C%E5%90%AC%E9%9B%A8; showExpriedIndex=1; showExpriedCompanyHome=1; showExpriedMyPublish=1; hasDeliver=15; index_location_city=%E5%85%A8%E5%9B%BD; _ga=GA1.2.80659696.1483162516; Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1492677130,1492689472,1492700323,1492828798; Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1492828981; LGSID=20170422103957-f9368c71-2704-11e7-91a7-525400f775ce; LGRID=20170422104300-6666d86f-2705-11e7-adb8-5254005c3644'
+                'cookie': 'user_trace_token=20161231133515-8cce936e9adc4b43abe2959e6d2f26ed; LGUID=20161231133515-e8366cd1-cf1a-11e6-b892-525400f775ce; isCloseNotice=0; showExpriedIndex=1; showExpriedCompanyHome=1; showExpriedMyPublish=1; hasDeliver=15; index_location_city=%E5%85%A8%E5%9B%BD; _gat=1; TG-TRACK-CODE=index_user; login=false; unick=""; _putrc=""; JSESSIONID=B627AC3354F9AC597B81F85FC552EA13; Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1492700323,1492828798,1492840842,1492841253; Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1492842822; _ga=GA1.2.80659696.1483162516; LGSID=20170422140041-03fdd1ec-2721-11e7-93f6-525400f775ce; LGRID=20170422143340-9ffaa58c-2725-11e7-ae1d-5254005c3644'
             }
-        proxies = {"http": "http://118.114.149.200:3128"}
+        proxies = {"http": "http://115.159.41.73:80"}
         data = requests.get(url, verify=False, headers=headers, proxies=proxies)
         return data.text
 
@@ -108,10 +108,14 @@ class Spider(object):
             self.url = 'https://www.lagou.com/jobs/positionAjax.json?px=new&first=true&pn=' + str(page) + '&kd=' + str(
                     self.keyword)
             po_list = self.getPosition(self.url)
-            time.sleep(2)
+            time.sleep(3)
             print('第', page, u'页完毕')
             #print(po_list)
-            container = container + po_list
+            try:
+                container = container + po_list
+            except TypeError as e:
+                print(e)
+                container = container
         return container
 
 
