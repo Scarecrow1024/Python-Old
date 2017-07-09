@@ -8,6 +8,10 @@ import time
 import xlwt
 import random
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import gevent
+from gevent import monkey
+
+monkey.patch_all()
 
 """
 不显示SSL警报
@@ -15,8 +19,8 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class Spider(object):
-    def __init__(self):
-        self.keyword = input('请输入职位：').strip()
+    #def __init__(self):
+    #    self.keyword = input('请输入职位：').strip()
 
     """
     获取数据
@@ -48,9 +52,9 @@ class Spider(object):
         # url = 'https://www.lagou.com/jobs/positionAjax.json?first=true&pn=%d&kd=%s&city=杭州' % (pages, self.keyword)
         headers = {
                 'User_agent': user_agent,
-                'cookie': 'user_trace_token=20161231133515-8cce936e9adc4b43abe2959e6d2f26ed; LGUID=20161231133515-e8366cd1-cf1a-11e6-b892-525400f775ce; isCloseNotice=0; showExpriedIndex=1; showExpriedCompanyHome=1; showExpriedMyPublish=1; hasDeliver=15; index_location_city=%E5%85%A8%E5%9B%BD; _gat=1; TG-TRACK-CODE=index_user; login=false; unick=""; _putrc=""; JSESSIONID=B627AC3354F9AC597B81F85FC552EA13; Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1492700323,1492828798,1492840842,1492841253; Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1492842822; _ga=GA1.2.80659696.1483162516; LGSID=20170422140041-03fdd1ec-2721-11e7-93f6-525400f775ce; LGRID=20170422143340-9ffaa58c-2725-11e7-ae1d-5254005c3644'
+                'cookie': 'JSESSIONID=B42E9196AE2F5EA2275D733C7897B616; Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1493351326; Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1493351347; _ga=GA1.2.1615193203.1493351326; _gat=1; user_trace_token=20170428114844-93bd8545-2bc5-11e7-b417-5254005c3644; LGSID=20170428114844-93bd89d6-2bc5-11e7-b417-5254005c3644; PRE_UTM=m_cf_cpt_baidu_pc; PRE_HOST=bzclk.baidu.com; PRE_SITE=http%3A%2F%2Fbzclk.baidu.com%2Fadrc.php%3Ft%3D06KL00c00fATEwT0o_4m0FNkUsaR8sFu000002iV8H300000xiYubb.THL0oUhY0A3qrHcdrjn1PWKxpA7EgLKM0Znqm19-njNBn1Rsnj0smyfzu0Kd5H6LwjD4nHb4PDfkwDFAfYmswD7jwRfdPHc3f17DP17D0ADqI1YhUyPGujYzrHfYP1R3PjczFMKzUvwGujYkP6K-5y9YIZK1rBtEILILQhk9uvqdQhPEUitOIgwVgLPEIgFWuHdVgvPhgvPsI7qBmy-bINqsmsKWThnqnW6zn1T%26tpl%3Dtpl_10085_14394_1%26l%3D1052356004%26attach%3Dlocation%253D%2526linkName%253D%2525E6%2525A0%252587%2525E9%2525A2%252598%2526linkText%253D%2525E3%252580%252590%2525E6%25258B%252589%2525E5%25258B%2525BE%2525E7%2525BD%252591%2525E3%252580%252591%2525E5%2525AE%252598%2525E7%2525BD%252591-%2525E4%2525B8%252593%2525E6%2525B3%2525A8%2525E4%2525BA%252592%2525E8%252581%252594%2525E7%2525BD%252591%2525E8%252581%25258C%2525E4%2525B8%25259A%2525E6%25259C%2525BA%2526xp%253Did%28%252522m4e160542%252522%29%25252FDIV%25255B1%25255D%25252FDIV%25255B1%25255D%25252FDIV%25255B1%25255D%25252FDIV%25255B1%25255D%25252FH2%25255B1%25255D%25252FA%25255B1%25255D%2526linkType%253D%2526checksum%253D250%26ie%3Dutf-8%26f%3D3%26tn%3D92583360_hao_pg%26wd%3Dlagou%26oq%3Dlagou%26rqlang%3Dcn%26ssl_sample%3Dnormal%26rsp%3D1; PRE_LAND=https%3A%2F%2Fwww.lagou.com%2F%3Futm_source%3Dm_cf_cpt_baidu_pc; LGRID=20170428114905-a0274d5e-2bc5-11e7-b417-5254005c3644; LGUID=20170428114844-93bd8bcb-2bc5-11e7-b417-5254005c3644; _putrc=9F25F1AC70195174; login=true; unick=%E5%B1%B1%E5%A4%96%E5%B0%8F%E6%A5%BC%E5%A4%9C%E5%90%AC%E9%9B%A8; showExpriedIndex=1; showExpriedCompanyHome=1; showExpriedMyPublish=1; hasDeliver=15; index_location_city=%E5%85%A8%E5%9B%BD'
             }
-        proxies = {"http": "http://115.159.41.73:80"}
+        proxies = {"http": "http://127.0.0.1:8087"}
         data = requests.get(url, verify=False, headers=headers, proxies=proxies)
         return data.text
 
@@ -80,10 +84,10 @@ class Spider(object):
             return l_list
         except json.decoder.JSONDecodeError as e:
             print(e)
-    def saveAll(self):
+    def saveAll(self, page, keyword):
         book = xlwt.Workbook()
-        sheet = book.add_sheet(str(self.keyword), cell_overwrite_ok=True)
-        container = self.getAll()
+        sheet = book.add_sheet(str(keyword), cell_overwrite_ok=True)
+        container = self.getAll(page, keyword)
         print('准备将数据存入表格...')
         heads = [u'公司全名', u'融资状况', u'工作名称', u'标签', u'薪酬', u'城市', u'学历要求', u'经验要求', u'工作类型', u'数据创建时间']
         ii = 0
@@ -97,18 +101,19 @@ class Spider(object):
                 sheet.write(i, j, str(one))
                 j += 1
             i += 1
-        book.save(str(self.keyword) + '.xls')
+        book.save(str(keyword) + '-2.xls')
         print('录入成功！')
 
     # 获取全部页数
-    def getAll(self):
-        pn = input('输入要爬取得页数：')
+    def getAll(self, page, keyword):
+        #pn = input('输入要爬取得页数：')
+        pn = page
         container = []
         for page in range(1, int(pn)+1):
-            self.url = 'https://www.lagou.com/jobs/positionAjax.json?px=new&first=true&pn=' + str(page) + '&kd=' + str(
-                    self.keyword)
+            self.url = 'http://www.lagou.com/jobs/positionAjax.json?px=new&first=true&pn=' + str(page) + '&kd=' + str(
+                    keyword)
             po_list = self.getPosition(self.url)
-            time.sleep(3)
+            time.sleep(0)
             print('第', page, u'页完毕')
             #print(po_list)
             try:
@@ -121,4 +126,10 @@ class Spider(object):
 
 if __name__ == "__main__":
     spider = Spider()
-    spider.saveAll()
+
+    l = []
+    data = [('286', 'php')]
+    for dt in data:
+        l.append(gevent.spawn(spider.saveAll, dt[0], dt[1]))
+    gevent.joinall(l)
+

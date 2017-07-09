@@ -13,6 +13,7 @@ def f(url):
         print(e)
 
 urls = ['https://www.python.org/', 'https://yahoo.com', 'https://github.com']
+
 start1 = time.time()
 for i in urls:
     f(i)

@@ -1,5 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 LoginUrl_GET = 'https://github.com/login'
 LoginUrl = 'https://github.com/session'
@@ -16,18 +19,21 @@ formData = {
         'commit': 'Sign+in',
         'utf8': "✓",
         "login": '819681825@qq.com',
-        "password": '************',
+        "password": 'zyf941126',
     }
 s = requests.Session()
-RESULT = s.get(LoginUrl_GET, headers=headers)
+RESULT = s.get(LoginUrl_GET, headers=headers, verify=False)
 content = RESULT.content
 
 soup = BeautifulSoup(content, "html.parser")
 token = soup.find('input', {'name': 'authenticity_token'})['value']
 formData['authenticity_token'] = token
-RESULT = s.post(LoginUrl, data=formData,)
+RESULT = s.post(LoginUrl, data=formData, verify=False)
 content = RESULT.content
 print(RESULT.url)
 print(RESULT.status_code)
 print(RESULT.cookies)
 print(content.decode())
+
+d = s.get('https://github.com/settings/profile', verify=False)
+print(d.text)

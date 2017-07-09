@@ -9,8 +9,8 @@ from urllib import request
 两种方式模拟登录hpu vpn
 """
 data = {
-    'svpn_name': '311309010130',
-    'svpn_password': '*****'
+    'svpn_name': '311309010125',
+    'svpn_password': '190031'
 }
 def login():
     s = requests.Session()
@@ -29,4 +29,4 @@ def login2():
     r = request.urlopen('https://vpn.hpu.edu.cn/web/1/http/0/218.196.240.97/')
     print(r.read())
 
-login()
+login2()
